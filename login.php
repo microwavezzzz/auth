@@ -75,3 +75,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </body>
 
 </html>
+
+//Register<?php
+include 'koneksi.php'; // menghubungkan ke database
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    // Cek apakah username sudah digunakan
+    $cek = mysqli_query($koneksi, "SELECT * FROM users WHERE username='$username'");
+    if (mysqli_num_rows($cek) > 0) {
+        echo "<script>alert('Username sudah digunakan!');</script>";
+    } else {
+        // Simpan user baru
+        $simpan = mysqli_query($koneksi, "INSERT INTO users (username, password) VALUES ('$username', '$password')");
+        if ($simpan) {
+            echo "<script>alert('Registrasi berhasil! Silakan login.'); window.location='login.php';</script>";
+        } else {
+            echo "<script>alert('Registrasi gagal!');</script>";
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrasi</title>
+</head>
+<body>
+    <h2>Form Registrasi</h2>
+    <form method="POST" action="">
+        <label>Username:</label><br>
+        <input type="text" name="username" required><br><br>
+        
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+        
+        <button type="submit">Daftar</button>
+    </form>
+    <p>Sudah punya akun? <a href="login.php">Login di sini</a></p>
+</body>
+</html>
